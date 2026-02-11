@@ -55,68 +55,27 @@ docker compose build --pull
 # --- 設定ファイルをボリュームにコピー ---
 echo ""
 echo "==> 設定ファイルを初期化中..."
+
+# config/openclaw.json から環境変数を置換
+if [[ ! -f "$ROOT_DIR/config/openclaw.json" ]]; then
+  echo "!!! config/openclaw.json が見つかりません"
+  exit 1
+fi
+
+# 環境変数を置換して一時ファイルに出力
+envsubst < "$ROOT_DIR/config/openclaw.json" > /tmp/openclaw.json.tmp
+
+# コンテナに設定ファイルをコピー
 docker compose run --rm --user node openclaw-gateway bash -c "
   mkdir -p ~/.openclaw/workspace ~/.openclaw/devices
   if [ ! -f ~/.openclaw/openclaw.json ]; then
-    cat > ~/.openclaw/openclaw.json <<'EOF'
-{
-  \"agents\": {
-    \"defaults\": {
-      \"workspace\": \"~/.openclaw/workspace\",
-      \"model\": {
-        \"primary\": \"google/gemini-3-flash-preview\"
-      },
-      \"models\": {
-        \"google/gemini-3-flash-preview\": {
-          \"alias\": \"gemini-flash\"
-        }
-      },
-      \"thinkingDefault\": \"low\",
-      \"timeoutSeconds\": 600,
-      \"maxConcurrent\": 3
-    }
-  },
-  \"models\": {
-    \"providers\": {
-      \"google\": {
-        \"apiKey\": \"\${GEMINI_API_KEY}\",
-        \"baseUrl\": \"https://generativelanguage.googleapis.com/v1beta\",
-        \"models\": [
-          { \"id\": \"gemini-3-flash-preview\", \"name\": \"Gemini 3 Flash\" },
-          { \"id\": \"gemini-3-pro-preview\", \"name\": \"Gemini 3 Pro\" },
-          { \"id\": \"gemini-2.5-flash\", \"name\": \"Gemini 2.5 Flash\" }
-        ]
-      }
-    }
-  },
-  \"gateway\": {
-    \"mode\": \"local\",
-    \"trustedProxies\": [\"127.0.0.1\", \"172.20.0.0/16\", \"::1\"]
-  },
-  \"channels\": {
-    \"telegram\": {
-      \"enabled\": true,
-      \"dmPolicy\": \"open\",
-      \"allowFrom\": [\"*\"],
-      \"groupPolicy\": \"allowlist\",
-      \"streamMode\": \"partial\"
-    }
-  },
-  \"plugins\": {
-    \"entries\": {
-      \"telegram\": {
-        \"enabled\": true
-      }
-    }
-  }
-}
-EOF
+    cat > ~/.openclaw/openclaw.json
     chmod 600 ~/.openclaw/openclaw.json
     echo '設定ファイルを作成しました'
   else
     echo '設定ファイルは既に存在します'
   fi
-"
+" < /tmp/openclaw.json.tmp
 
 # --- 起動 ---
 echo ""

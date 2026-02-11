@@ -20,6 +20,7 @@ services:
       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
       GEMINI_API_KEY: ${GEMINI_API_KEY}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      BRAVE_SEARCH_API_KEY: ${BRAVE_SEARCH_API_KEY}
 
     volumes:
       - openclaw-config:/home/node/.openclaw

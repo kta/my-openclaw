@@ -29,11 +29,33 @@
     }
   },
   "gateway": {
-    "mode": "local"
+    "mode": "local",
+    "trustedProxies": ["127.0.0.1", "172.20.0.0/16", "::1"]
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "provider": "brave",
+        "apiKey": "${BRAVE_SEARCH_API_KEY}",
+        "maxResults": 5,
+        "timeoutSeconds": 30
+      }
+    }
   },
   "channels": {
     "telegram": {
-      "enabled": true
+      "enabled": true,
+      "dmPolicy": "open",
+      "allowFrom": ["*"],
+      "groupPolicy": "allowlist",
+      "streamMode": "partial"
+    }
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      }
     }
   }
 }

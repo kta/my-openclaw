@@ -15,6 +15,7 @@
 - Docker & Docker Compose
 - Telegram Bot Token ([@BotFather](https://t.me/BotFather) から取得)
 - Google Gemini API Key ([Google AI Studio](https://aistudio.google.com/apikey) から取得)
+- **オプション**: Brave Search API Key ([Brave Search API](https://brave.com/search/api/) から取得) - Web 検索機能を有効化
 
 ## セットアップ
 
@@ -36,9 +37,14 @@ cp .env.example .env
 ```bash
 TELEGRAM_BOT_TOKEN=<@BotFatherから取得したトークン>
 GEMINI_API_KEY=<Google AI Studioで生成したAPIキー>
+
+# オプション: Web 検索を有効化（月2,000リクエスト無料）
+BRAVE_SEARCH_API_KEY=<Brave Search APIで生成したキー>
 ```
 
 `OPENCLAW_GATEWAY_TOKEN` は setup.sh が自動生成するので空欄のままでOKです。
+
+`BRAVE_SEARCH_API_KEY` はオプションです。設定すると、OpenClaw が Web 検索機能を使用できるようになります。
 
 ### 3. セットアップスクリプトを実行
 
@@ -89,6 +95,12 @@ docker compose down
 # ログ確認（リアルタイム）
 docker compose logs -f openclaw-gateway
 
+# 設定ファイルを再読み込み
+bash scripts/reload-config.sh
+
+# 設定ファイルの自動監視（開発時）
+bash scripts/watch-config.sh
+
 # 最新版にアップデート
 bash scripts/rebuild.sh
 ```
@@ -97,16 +109,64 @@ bash scripts/rebuild.sh
 
 ```text
 my-openclaw/
-├── Dockerfile              # OpenClawをソースからビルド
-├── docker-compose.yml      # セキュリティ強化済み構成
-├── .env                    # 環境変数（gitignore済み）
-├── .env.example            # 環境変数テンプレート
+├── Dockerfile                # OpenClawをソースからビルド
+├── docker-compose.yml        # セキュリティ強化済み構成
+├── .env                      # 環境変数（gitignore済み）
+├── .env.example              # 環境変数テンプレート
 ├── config/
-│   └── openclaw.json       # AIモデル設定
+│   └── openclaw.json         # OpenClaw設定ファイル（環境変数対応）
 ├── scripts/
-│   ├── setup.sh            # 初回セットアップ
-│   └── rebuild.sh          # 最新版リビルド
-└── CLAUDE.md               # 開発者向けガイド
+│   ├── setup.sh              # 初回セットアップ
+│   ├── rebuild.sh            # 最新版リビルド
+│   └── approve-devices.sh    # デバイス自動承認
+├── CLAUDE.md                 # 開発者向けガイド
+└── README.md                 # このファイル
+```
+
+## 設定のカスタマイズ
+
+OpenClaw の設定は `config/openclaw.json` で管理されています。このファイルを直接編集して設定を変更できます。
+
+- **環境変数の参照**: `${VARIABLE_NAME}` の形式で環境変数を参照可能
+- **変更の反映**: 以下の方法で設定を反映できます
+
+### 方法1: 手動で反映（推奨）
+
+```bash
+bash scripts/reload-config.sh
+```
+
+### 方法2: 自動監視（開発時に便利）
+
+```bash
+# 事前に fswatch をインストール（Mac の場合）
+brew install fswatch
+
+# 監視開始（設定ファイルを編集すると自動で反映）
+bash scripts/watch-config.sh
+```
+
+### 設定例
+
+```json
+{
+  "models": {
+    "providers": {
+      "google": {
+        "apiKey": "${GEMINI_API_KEY}"
+      }
+    }
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "provider": "brave",
+        "apiKey": "${BRAVE_SEARCH_API_KEY}",
+        "maxResults": 10
+      }
+    }
+  }
+}
 ```
 
 ## セキュリティ
@@ -160,6 +220,27 @@ bash scripts/setup.sh
 ```
 
 ## 高度な設定
+
+### Brave Search API の設定
+
+Web 検索機能を有効化するには：
+
+1. [Brave Search API](https://brave.com/search/api/) でアカウント作成
+2. **Data for Search** プランを選択（無料で月2,000リクエスト）
+3. API キーを生成
+4. `.env` に追加:
+
+   ```bash
+   BRAVE_SEARCH_API_KEY=<生成したAPIキー>
+   ```
+
+5. コンテナを再起動:
+
+   ```bash
+   docker compose restart openclaw-gateway
+   ```
+
+これにより、OpenClaw が最新情報を検索して回答できるようになります。
 
 ### 特定バージョンをビルド
 
