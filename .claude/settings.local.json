@@ -11,7 +11,8 @@
       "WebFetch(domain:gist.github.com)",
       "WebFetch(domain:gist.githubusercontent.com)",
       "WebFetch(domain:moltfounders.com)",
-      "WebFetch(domain:www.getopenclaw.ai)"
+      "WebFetch(domain:www.getopenclaw.ai)",
+      "Bash(docker compose run:*)"
     ]
   }
 }
