@@ -17,7 +17,8 @@
       "Bash(docker compose up:*)",
       "Bash(docker compose restart:*)",
       "Bash(bash:*)",
-      "Bash(docker compose exec:*)"
+      "Bash(docker compose exec:*)",
+      "Bash(docker volume inspect:*)"
     ]
   }
 }
