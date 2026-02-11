@@ -52,11 +52,58 @@ echo ""
 echo "==> Docker イメージをビルド中（初回は時間がかかります）..."
 docker compose build --pull
 
-# --- Telegram チャネル追加 ---
+# --- 設定ファイルをボリュームにコピー ---
 echo ""
-echo "==> Telegram チャネルを追加中..."
-docker compose run --rm openclaw-gateway \
-  node openclaw.mjs channels add --channel telegram --token "${TELEGRAM_BOT_TOKEN}"
+echo "==> 設定ファイルを初期化中..."
+docker compose run --rm openclaw-gateway bash -c "
+  if [ ! -f ~/.openclaw/openclaw.json ]; then
+    cat > ~/.openclaw/openclaw.json <<'EOF'
+{
+  \"agents\": {
+    \"defaults\": {
+      \"workspace\": \"~/.openclaw/workspace\",
+      \"model\": {
+        \"primary\": \"google/gemini-3-flash-preview\"
+      },
+      \"models\": {
+        \"google/gemini-3-flash-preview\": {
+          \"alias\": \"gemini-flash\"
+        }
+      },
+      \"thinkingDefault\": \"low\",
+      \"timeoutSeconds\": 600,
+      \"maxConcurrent\": 3
+    }
+  },
+  \"models\": {
+    \"providers\": {
+      \"google\": {
+        \"apiKey\": \"\${GEMINI_API_KEY}\",
+        \"baseUrl\": \"https://generativelanguage.googleapis.com/v1beta\",
+        \"models\": [
+          { \"id\": \"gemini-3-flash-preview\", \"name\": \"Gemini 3 Flash\" },
+          { \"id\": \"gemini-3-pro-preview\", \"name\": \"Gemini 3 Pro\" },
+          { \"id\": \"gemini-2.5-flash\", \"name\": \"Gemini 2.5 Flash\" }
+        ]
+      }
+    }
+  },
+  \"gateway\": {
+    \"mode\": \"local\"
+  },
+  \"channels\": {
+    \"telegram\": {
+      \"enabled\": true
+    }
+  }
+}
+EOF
+    chmod 600 ~/.openclaw/openclaw.json
+    echo '設定ファイルを作成しました'
+  else
+    echo '設定ファイルは既に存在します'
+  fi
+"
 
 # --- 起動 ---
 echo ""
