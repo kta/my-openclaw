@@ -55,7 +55,8 @@ docker compose build --pull
 # --- 設定ファイルをボリュームにコピー ---
 echo ""
 echo "==> 設定ファイルを初期化中..."
-docker compose run --rm openclaw-gateway bash -c "
+docker compose run --rm --user node openclaw-gateway bash -c "
+  mkdir -p ~/.openclaw/workspace ~/.openclaw/devices
   if [ ! -f ~/.openclaw/openclaw.json ]; then
     cat > ~/.openclaw/openclaw.json <<'EOF'
 {

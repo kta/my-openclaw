@@ -37,7 +37,10 @@ COPY --from=builder /app /app
 ENV NODE_ENV=production
 
 # 非rootユーザーで実行（node:22-bookworm-slim には uid 1000 の node ユーザーが存在）
-RUN chown -R node:node /app
+RUN chown -R node:node /app && \
+    mkdir -p /home/node/.openclaw && \
+    chown -R node:node /home/node/.openclaw
+
 USER node
 
 EXPOSE 18789 18790
