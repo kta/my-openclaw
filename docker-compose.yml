@@ -23,14 +23,14 @@ services:
 
     volumes:
       - openclaw-config:/home/node/.openclaw
-      - openclaw-workspace:/home/node/.openclaw/workspace
       - ./config/openclaw.json:/home/node/.openclaw/openclaw.json:ro
 
     # --- セキュリティ強化 ---
-    read_only: true
+    # read_only: true  # OpenClawが初期化時に複数ディレクトリを作成するため無効化
     tmpfs:
       - /tmp:size=256m
       - /home/node/.cache:size=512m
+      - /app/.pnpm:size=128m
     security_opt:
       - no-new-privileges:true
     cap_drop:
