@@ -14,7 +14,8 @@
       "WebFetch(domain:www.getopenclaw.ai)",
       "Bash(docker compose run:*)",
       "Bash(docker compose down:*)",
-      "Bash(docker compose up:*)"
+      "Bash(docker compose up:*)",
+      "Bash(docker compose restart:*)"
     ]
   }
 }
