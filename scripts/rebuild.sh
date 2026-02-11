@@ -20,8 +20,13 @@ echo "==> コンテナを再作成して起動..."
 docker compose up -d --force-recreate
 
 echo ""
+echo "==> Telegram を有効化中..."
+sleep 3
+docker compose exec openclaw-gateway node openclaw.mjs doctor --fix
+
+echo ""
 echo "==> 完了! ログ確認: docker compose logs -f openclaw-gateway"
 
 echo ""
-echo "Dashboard:   http://localhost:18779?token=${OPENCLAW_GATEWAY_TOKEN}"
+echo "Dashboard:   http://localhost:18789?token=${OPENCLAW_GATEWAY_TOKEN}"
 echo ""

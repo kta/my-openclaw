@@ -111,6 +111,12 @@ echo ""
 echo "==> ゲートウェイを起動中..."
 docker compose up -d
 
+# --- doctor --fix を自動実行 ---
+echo ""
+echo "==> Telegram を有効化中..."
+sleep 3
+docker compose exec openclaw-gateway node openclaw.mjs doctor --fix
+
 echo ""
 echo "=========================================="
 echo "  セットアップ完了!"
@@ -121,6 +127,6 @@ echo "状態確認:    docker compose ps"
 echo "停止:        docker compose down"
 echo "最新版更新:  bash scripts/rebuild.sh"
 echo ""
-echo "Dashboard:   http://localhost:18779?token=${OPENCLAW_GATEWAY_TOKEN}"
+echo "Dashboard:   http://localhost:18789?token=${OPENCLAW_GATEWAY_TOKEN}"
 echo ""
 echo "Telegram で Bot にメッセージを送信して動作確認してください。"
