@@ -63,7 +63,9 @@ if [[ ! -f "$ROOT_DIR/config/openclaw.json" ]]; then
 fi
 
 # 環境変数を置換して一時ファイルに出力
-envsubst < "$ROOT_DIR/config/openclaw.json" > /tmp/openclaw.json.tmp
+sed -e "s|\${GEMINI_API_KEY}|${GEMINI_API_KEY}|g" \
+    -e "s|\${BRAVE_SEARCH_API_KEY}|${BRAVE_SEARCH_API_KEY}|g" \
+    < "$ROOT_DIR/config/openclaw.json" > /tmp/openclaw.json.tmp
 
 # コンテナに設定ファイルをコピー
 docker compose run --rm --user node openclaw-gateway bash -c "
