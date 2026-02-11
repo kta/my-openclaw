@@ -18,7 +18,13 @@
   "models": {
     "providers": {
       "google": {
-        "apiKey": "${GEMINI_API_KEY}"
+        "apiKey": "${GEMINI_API_KEY}",
+        "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+        "models": [
+          "gemini-3-flash-preview",
+          "gemini-3-pro-preview",
+          "gemini-2.5-flash"
+        ]
       }
     }
   }
