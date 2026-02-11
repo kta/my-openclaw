@@ -68,4 +68,8 @@ services:
 
 volumes:
   openclaw-config:
-  openclaw-workspace:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/volumes/openclaw-config
