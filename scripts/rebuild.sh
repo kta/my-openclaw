@@ -21,3 +21,7 @@ docker compose up -d --force-recreate
 
 echo ""
 echo "==> 完了! ログ確認: docker compose logs -f openclaw-gateway"
+
+echo ""
+echo "Dashboard:   http://localhost:18779?token=${OPENCLAW_GATEWAY_TOKEN}"
+echo ""
