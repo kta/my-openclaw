@@ -23,7 +23,6 @@ services:
 
     volumes:
       - openclaw-config:/home/node/.openclaw
-      - ./config/openclaw.json:/home/node/.openclaw/openclaw.json:ro
 
     # --- セキュリティ強化 ---
     # read_only: true  # OpenClawが初期化時に複数ディレクトリを作成するため無効化
