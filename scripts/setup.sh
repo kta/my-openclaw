@@ -94,7 +94,18 @@ docker compose run --rm --user node openclaw-gateway bash -c "
   },
   \"channels\": {
     \"telegram\": {
-      \"enabled\": true
+      \"enabled\": true,
+      \"dmPolicy\": \"open\",
+      \"allowFrom\": [\"*\"],
+      \"groupPolicy\": \"allowlist\",
+      \"streamMode\": \"partial\"
+    }
+  },
+  \"plugins\": {
+    \"entries\": {
+      \"telegram\": {
+        \"enabled\": true
+      }
     }
   }
 }

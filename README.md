@@ -50,12 +50,20 @@ bash scripts/setup.sh
 
 - ゲートウェイ認証トークンの生成
 - Dockerイメージのビルド（初回は10-20分程度）
-- Telegramチャネルの登録
+- OpenClaw設定ファイル (openclaw.json) の生成
+- Telegram チャネルの自動有効化 (`openclaw doctor --fix`)
 - コンテナの起動
 
 ### 4. 動作確認
 
-Telegram で Bot にメッセージを送信してみてください。Gemini 3 Flash が応答します。
+**Web ダッシュボード**でアクセス:
+
+セットアップ完了時に表示される URL（token付き）をブラウザで開きます:
+```
+http://localhost:18789?token=<自動生成されたトークン>
+```
+
+または **Telegram** で Bot にメッセージを送信してください。Gemini 3 Flash が応答します。
 
 ```bash
 # ログ確認
@@ -101,13 +109,13 @@ my-openclaw/
 
 以下のセキュリティ対策を実装済み:
 
-- ✅ **read-only rootfs** — コンテナ内ファイルシステムの改竄防止
 - ✅ **最小権限** — `cap_drop: ALL` で全権限削除、必要最小限のみ付与
 - ✅ **非rootユーザー** — uid 1000 (node) で実行
 - ✅ **localhost-only** — ポートは `127.0.0.1` のみにバインド
 - ✅ **no-new-privileges** — 実行時の権限昇格を防止
 - ✅ **リソース制限** — メモリ2GB、CPU 2コアの上限設定
 - ✅ **ログローテーション** — 10MB x 3ファイルに自動制限
+- ✅ **トークン認証** — Web ダッシュボードへのアクセスにトークンが必要
 
 ## トラブルシューティング
 

@@ -32,14 +32,14 @@ OPENCLAW_VERSION=v2026.2.9 docker compose build --no-cache
 ```
 Dockerfile          ソースからビルド（git clone → pnpm build）
 docker-compose.yml  セキュリティ強化済みの単一サービス構成
-config/openclaw.json  AIモデル設定（Gemini 3 Flash）
-scripts/setup.sh      初回セットアップ（トークン生成、Telegram接続、起動）
-scripts/rebuild.sh    最新版リビルド（--no-cache で全レイヤー再実行）
+scripts/setup.sh    初回セットアップ（トークン生成、設定生成、Telegram有効化、起動）
+scripts/rebuild.sh  最新版リビルド（--no-cache で全レイヤー再実行）
 ```
 
 - **ビルド方式**: Dockerfile内で `git clone --depth 1` により最新ソースを取得。`--no-cache` ビルドで常に最新版を取得可能
-- **永続化**: `openclaw-config` と `openclaw-workspace` の named volumes にデータ保持
-- **セキュリティ**: read-only rootfs, cap_drop ALL, no-new-privileges, localhost-only port binding
+- **永続化**: `openclaw-config` の named volume に設定とデータを保持
+- **セキュリティ**: cap_drop ALL, no-new-privileges, localhost-only port binding
+- **自動設定**: setup.sh が openclaw.json を自動生成し、`openclaw doctor --fix` で Telegram を自動有効化
 
 ## Key Environment Variables
 
