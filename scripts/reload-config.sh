@@ -27,7 +27,7 @@ fi
 # 環境変数を置換
 echo "    環境変数を置換中..."
 sed -e "s|\${GEMINI_API_KEY}|${GEMINI_API_KEY}|g" \
-    -e "s|\${BRAVE_SEARCH_API_KEY}|${BRAVE_SEARCH_API_KEY}|g" \
+    -e "s|\${BRAVE_SEARCH_API_KEY}|${BRAVE_SEARCH_API_KEY:-}|g" \
     < "$ROOT_DIR/config/openclaw.json" > /tmp/openclaw.json.tmp
 
 # コンテナに設定ファイルをコピー

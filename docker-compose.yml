@@ -21,9 +21,11 @@ services:
       GEMINI_API_KEY: ${GEMINI_API_KEY}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       BRAVE_SEARCH_API_KEY: ${BRAVE_SEARCH_API_KEY}
+      OBSIDIAN_VAULT: /obsidian
 
     volumes:
       - openclaw-config:/home/node/.openclaw
+      - ${OBSIDIAN_VAULT_PATH:-/tmp/empty}:/obsidian:rw
 
     # --- セキュリティ強化 ---
     # read_only: true  # OpenClawが初期化時に複数ディレクトリを作成するため無効化

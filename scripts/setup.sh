@@ -28,6 +28,24 @@ if [[ -z "${OPENCLAW_GATEWAY_TOKEN:-}" ]]; then
   echo "    OPENCLAW_GATEWAY_TOKEN を自動生成しました"
 fi
 
+# --- Obsidian Vault パス確認 ---
+if [[ -z "${OBSIDIAN_VAULT_PATH:-}" ]]; then
+  echo ""
+  echo "⚠️  OBSIDIAN_VAULT_PATH が .env に設定されていません"
+  echo "   Obsidian 連携を無効化して続行します"
+  echo "   設定後、docker compose up -d で有効化できます"
+  echo ""
+else
+  if [[ ! -d "${OBSIDIAN_VAULT_PATH}" ]]; then
+    echo ""
+    echo "⚠️  指定された Obsidian Vault が見つかりません: ${OBSIDIAN_VAULT_PATH}"
+    echo "   Obsidian 連携が正しく動作しない可能性があります"
+    echo ""
+  else
+    echo "    Obsidian Vault: ${OBSIDIAN_VAULT_PATH} ✓"
+  fi
+fi
+
 # --- 必須変数チェック ---
 source "$ROOT_DIR/.env"
 
@@ -64,12 +82,12 @@ fi
 
 # 環境変数を置換して一時ファイルに出力
 sed -e "s|\${GEMINI_API_KEY}|${GEMINI_API_KEY}|g" \
-    -e "s|\${BRAVE_SEARCH_API_KEY}|${BRAVE_SEARCH_API_KEY}|g" \
+    -e "s|\${BRAVE_SEARCH_API_KEY}|${BRAVE_SEARCH_API_KEY:-}|g" \
     < "$ROOT_DIR/config/openclaw.json" > /tmp/openclaw.json.tmp
 
-# コンテナに設定ファイルをコピー
+# コンテナに設定ファイルをコピー & OpenClaw ディレクトリ作成
 docker compose run --rm --user node openclaw-gateway bash -c "
-  mkdir -p ~/.openclaw/workspace ~/.openclaw/devices
+  mkdir -p ~/.openclaw/workspace ~/.openclaw/devices /obsidian/OpenClaw
   if [ ! -f ~/.openclaw/openclaw.json ]; then
     cat > ~/.openclaw/openclaw.json
     chmod 600 ~/.openclaw/openclaw.json
@@ -77,6 +95,7 @@ docker compose run --rm --user node openclaw-gateway bash -c "
   else
     echo '設定ファイルは既に存在します'
   fi
+  echo 'Obsidian 作業ディレクトリ: /obsidian/OpenClaw'
 " < /tmp/openclaw.json.tmp
 
 # --- 起動 ---

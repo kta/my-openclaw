@@ -1,7 +1,7 @@
 {
   "agents": {
     "defaults": {
-      "workspace": "~/.openclaw/workspace",
+      "workspace": "/obsidian/OpenClaw",
       "model": {
         "primary": "google/gemini-3-flash-preview"
       },
