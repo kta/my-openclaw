@@ -90,7 +90,8 @@ docker compose run --rm --user node openclaw-gateway bash -c "
     }
   },
   \"gateway\": {
-    \"mode\": \"local\"
+    \"mode\": \"local\",
+    \"trustedProxies\": [\"127.0.0.1\", \"172.20.0.0/16\", \"::1\"]
   },
   \"channels\": {
     \"telegram\": {
@@ -139,5 +140,14 @@ echo "停止:        docker compose down"
 echo "最新版更新:  bash scripts/rebuild.sh"
 echo ""
 echo "Dashboard:   http://localhost:18789?token=${OPENCLAW_GATEWAY_TOKEN}"
+echo ""
+echo "==> Dashboard に初回アクセス中（デバイス承認のため）..."
+echo "    ブラウザで上記 URL を開いてください（30秒待機します）"
+echo ""
+
+# 30秒待機してからデバイスを自動承認
+sleep 30
+bash "$ROOT_DIR/scripts/approve-devices.sh" || echo "    (デバイス承認をスキップしました)"
+
 echo ""
 echo "Telegram で Bot にメッセージを送信して動作確認してください。"

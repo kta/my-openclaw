@@ -30,16 +30,21 @@ OPENCLAW_VERSION=v2026.2.9 docker compose build --no-cache
 ## Architecture
 
 ```
-Dockerfile          ソースからビルド（git clone → pnpm build）
-docker-compose.yml  セキュリティ強化済みの単一サービス構成
-scripts/setup.sh    初回セットアップ（トークン生成、設定生成、Telegram有効化、起動）
-scripts/rebuild.sh  最新版リビルド（--no-cache で全レイヤー再実行）
+Dockerfile               ソースからビルド（git clone → pnpm build）
+docker-compose.yml       セキュリティ強化済みの単一サービス構成
+scripts/setup.sh         初回セットアップ（トークン生成、設定生成、Telegram有効化、起動）
+scripts/rebuild.sh       最新版リビルド（--no-cache で全レイヤー再実行）
+scripts/approve-devices.sh  Web ダッシュボード用デバイス自動承認
 ```
 
 - **ビルド方式**: Dockerfile内で `git clone --depth 1` により最新ソースを取得。`--no-cache` ビルドで常に最新版を取得可能
 - **永続化**: `openclaw-config` の named volume に設定とデータを保持
 - **セキュリティ**: cap_drop ALL, no-new-privileges, localhost-only port binding
-- **自動設定**: setup.sh が openclaw.json を自動生成し、`openclaw doctor --fix` で Telegram を自動有効化
+- **自動設定**:
+  - setup.sh が openclaw.json を自動生成
+  - `openclaw doctor --fix` で Telegram を自動有効化
+  - approve-devices.sh で Web ダッシュボードのデバイスペアリングを自動承認
+- **デバイス承認**: setup.sh/rebuild.sh が 30秒待機し、ブラウザでアクセス後に pending デバイスを自動承認
 
 ## Key Environment Variables
 
