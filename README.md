@@ -47,6 +47,7 @@ bash scripts/setup.sh
 ```
 
 このスクリプトは以下を自動実行します:
+
 - ゲートウェイ認証トークンの生成
 - Dockerイメージのビルド（初回は10-20分程度）
 - Telegramチャネルの登録
@@ -82,7 +83,7 @@ bash scripts/rebuild.sh
 
 ## ディレクトリ構成
 
-```
+```text
 my-openclaw/
 ├── Dockerfile              # OpenClawをソースからビルド
 ├── docker-compose.yml      # セキュリティ強化済み構成

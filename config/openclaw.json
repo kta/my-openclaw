@@ -1,5 +1,25 @@
 {
-  "agent": {
-    "model": "google/gemini-3-flash-preview"
+  "agents": {
+    "defaults": {
+      "workspace": "~/.openclaw/workspace",
+      "model": {
+        "primary": "google/gemini-3-flash-preview"
+      },
+      "models": {
+        "google/gemini-3-flash-preview": {
+          "alias": "gemini-flash"
+        }
+      },
+      "thinkingDefault": "low",
+      "timeoutSeconds": 600,
+      "maxConcurrent": 3
+    }
+  },
+  "models": {
+    "providers": {
+      "google": {
+        "apiKey": "${GEMINI_API_KEY}"
+      }
+    }
   }
 }
